@@ -16,6 +16,7 @@ import java.util.Scanner;
 public class NetworkUtils {
     final static String MOVIEDB_BASE_URL = "http://api.themoviedb.org/3/movie/";
     final static String MOVIEDB_BASE_IMAGE_URL = "http://image.tmdb.org/t/p/";
+    final static String MOVIEDB_API_KEY = "INSERT API KEY HERE";
 
     public static String buildUrl(String movieSortQuery){
         Uri.Builder builder = new Uri.Builder().scheme("http")
@@ -23,7 +24,7 @@ public class NetworkUtils {
                 .appendPath("3")
                 .appendPath("movie")
                 .appendPath(movieSortQuery)
-                .appendQueryParameter("api_key", "INSERT API HERE");
+                .appendQueryParameter("api_key", MOVIEDB_API_KEY);
         Uri uri = builder.build();
         String url = uri.toString();
         return url;

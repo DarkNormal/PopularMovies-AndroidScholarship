@@ -51,7 +51,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             mMoviePosterImageView = (ImageView) itemView.findViewById(R.id.item_movie_poster);
         }
         public void bind(){
-            Picasso.with(mContext).load("http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg").into(mMoviePosterImageView);
+            if(mPosterPaths.length > 0){
+                Picasso.with(mContext).load("http://image.tmdb.org/t/p/w185//" + mPosterPaths[getAdapterPosition()]).into(mMoviePosterImageView);
+            }
+
         }
     }
 }
