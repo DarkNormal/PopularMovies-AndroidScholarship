@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 import com.marklordan.popularmovies.utils.NetworkUtils;
 
 import org.json.JSONArray;
@@ -24,14 +25,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String POSTER_ARRAY_KEY = "com.marklordan.popularmovies.poster_array";
+    private static final String MOVIE_LIST_KEY = "com.marklordan.popularmovies.MOVIE_LIST";
 
     private RecyclerView mRecyclerView;
     private MovieAdapter mAdapter;
-    private String[] moviePosterPaths;
+    private ArrayList<Movie> mMovies;
     private RequestQueue queue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +42,16 @@ public class MainActivity extends AppCompatActivity {
         queue = Volley.newRequestQueue(this);
 
         if(savedInstanceState != null){
-            moviePosterPaths = savedInstanceState.getStringArray(POSTER_ARRAY_KEY);
+            mMovies = (ArrayList<Movie>) savedInstanceState.getSerializable(MOVIE_LIST_KEY);
         }
         else{
-            moviePosterPaths = new String[20];
+            mMovies = new ArrayList<>();
             getMoviesFromApi();
         }
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_movie_list);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
-        mAdapter = new MovieAdapter(moviePosterPaths, this);
+        mAdapter = new MovieAdapter(mMovies, this);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -65,9 +67,11 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "got a response", Toast.LENGTH_SHORT).show();
                         JSONArray resultsArray = null;
                         try {
+                            Gson gson = new Gson();
                             resultsArray = response.getJSONArray("results");
                             for (int i = 0; i < resultsArray.length(); i++) {
-                                moviePosterPaths[i] = resultsArray.getJSONObject(i).getString("poster_path");
+                                Movie movie = gson.fromJson(String.valueOf(resultsArray.getJSONObject(i)), Movie.class);
+                                mMovies.add(movie);
                             }
                             mAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
@@ -94,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putStringArray(POSTER_ARRAY_KEY, moviePosterPaths);
+        outState.putSerializable(MOVIE_LIST_KEY, mMovies);
         super.onSaveInstanceState(outState);
 
     }

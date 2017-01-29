@@ -10,17 +10,19 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 /**
  * Created by Mark on 23/01/2017.
  */
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     private Context mContext;
-    private String[] mPosterPaths;
+    private ArrayList<Movie> mMovies;
 
-    public MovieAdapter(String[] moviePosterPaths, Context context){
+    public MovieAdapter(ArrayList<Movie> movies, Context context){
         this.mContext = context;
-        mPosterPaths = moviePosterPaths;
+        mMovies = movies;
 
     }
     @Override
@@ -40,7 +42,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @Override
     public int getItemCount() {
-        return mPosterPaths.length;
+        return mMovies.size();
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder{
@@ -51,8 +53,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             mMoviePosterImageView = (ImageView) itemView.findViewById(R.id.item_movie_poster);
         }
         public void bind(){
-            if(mPosterPaths.length > 0){
-                Picasso.with(mContext).load("http://image.tmdb.org/t/p/w185//" + mPosterPaths[getAdapterPosition()]).into(mMoviePosterImageView);
+            if(mMovies.size()> 0){
+                Picasso.with(mContext).load("http://image.tmdb.org/t/p/w185//" + mMovies.get(getAdapterPosition()).getPosterPath()).into(mMoviePosterImageView);
             }
 
         }
