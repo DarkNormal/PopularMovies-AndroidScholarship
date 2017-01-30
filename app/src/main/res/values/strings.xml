@@ -2,4 +2,9 @@
     <string name="app_name">Popular Movies</string>
 
     <string name="menu_order_by">Order By: %1$s</string>
+    <string name="top_rated_order">Top Rated</string>
+    <string name="most_popular_order">Most Popular</string>
+
+    <string name="popular">popular</string>
+    <string name="rated">top_rated</string>
 </resources>

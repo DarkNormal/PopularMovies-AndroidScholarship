@@ -19,10 +19,12 @@ import java.util.ArrayList;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     private Context mContext;
     private ArrayList<Movie> mMovies;
+    private final MovieItemClickListener mClickListener;
 
-    public MovieAdapter(ArrayList<Movie> movies, Context context){
+    public MovieAdapter(ArrayList<Movie> movies, Context context, MovieItemClickListener clickListener){
         this.mContext = context;
         mMovies = movies;
+        mClickListener = clickListener;
 
     }
     @Override
@@ -35,6 +37,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return holder;
     }
 
+    public interface MovieItemClickListener{
+        void onItemClick(int itemClicked);
+    }
+
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         holder.bind();
@@ -45,18 +51,23 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return mMovies.size();
     }
 
-    public class MovieViewHolder extends RecyclerView.ViewHolder{
+    public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private ImageView mMoviePosterImageView;
 
         public MovieViewHolder(View itemView) {
             super(itemView);
             mMoviePosterImageView = (ImageView) itemView.findViewById(R.id.item_movie_poster);
+            itemView.setOnClickListener(this);
         }
         public void bind(){
             if(mMovies.size()> 0){
                 Picasso.with(mContext).load("http://image.tmdb.org/t/p/w185//" + mMovies.get(getAdapterPosition()).getPosterPath()).into(mMoviePosterImageView);
             }
 
+        }
+        @Override
+        public void onClick(View v) {
+            mClickListener.onItemClick(getAdapterPosition());
         }
     }
 }
