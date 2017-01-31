@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     private static final String MOVIE_LIST_KEY = "com.marklordan.popularmovies.MOVIE_LIST";
     private static final String MOVIE_ORDER_FRAGMENT = "com.marklordan.popularmovies.ORDER_FRAGMENT";
+    private static final String MOVIE_SORT_ORDER = "com.marklordan.popularmovies.SORT_ORDER";
 
 
     private RecyclerView mRecyclerView;
@@ -49,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
         if(savedInstanceState != null){
             mMovies = (ArrayList<Movie>) savedInstanceState.getSerializable(MOVIE_LIST_KEY);
+            mSortOrder = savedInstanceState.getString(MOVIE_SORT_ORDER);
+
         }
         else{
             mMovies = new ArrayList<>();
@@ -101,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         String menuSortTitle = String.format(getString(R.string.menu_order_by), getString(R.string.most_popular_order));
         menu.findItem(R.id.menu_sort_by_option).setTitle(menuSortTitle);
         mMenu = menu;
+        updateMenuSortOrder();
         return true;
     }
 
@@ -120,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(MOVIE_LIST_KEY, mMovies);
+        outState.putString(MOVIE_SORT_ORDER,mSortOrder);
         super.onSaveInstanceState(outState);
 
     }
