@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     private static final String MOVIE_LIST_KEY = "com.marklordan.popularmovies.MOVIE_LIST";
     private static final String MOVIE_ORDER_FRAGMENT = "com.marklordan.popularmovies.ORDER_FRAGMENT";
 
+
     private RecyclerView mRecyclerView;
     private MovieAdapter mAdapter;
     private ArrayList<Movie> mMovies;
@@ -125,7 +126,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     @Override
     public void onItemClick(int itemClicked) {
-        startActivity(new Intent(this, MovieDetailActivity.class));
+        Movie selectedMovie = mMovies.get(itemClicked);
+        Intent intent = MovieDetailActivity.newInstance(this,selectedMovie);
+        startActivity(intent);
     }
 
     @Override
