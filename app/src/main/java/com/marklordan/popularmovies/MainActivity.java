@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mQueue = Volley.newRequestQueue(this);
-        mSortOrder = getString(R.string.popular);
+
 
         mProgressBar = (ProgressBar) findViewById(R.id.pb_loading_indicator);
         mNetworkErrorView = (LinearLayout) findViewById(R.id.network_error_view);
@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
         }
         else{
+            mSortOrder = getString(R.string.popular);
             mMovies = new ArrayList<>();
             getMoviesFromApi(mSortOrder);
         }
