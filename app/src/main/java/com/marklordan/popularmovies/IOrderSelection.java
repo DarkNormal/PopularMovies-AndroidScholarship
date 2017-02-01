@@ -1,5 +1,5 @@
 package com.marklordan.popularmovies;
 
-public interface IOrderSelection{
+interface IOrderSelection{
     void onSelectedOrderOption(String sortOrder);
 }

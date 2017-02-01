@@ -9,7 +9,9 @@ import java.util.Date;
  * Created by Mark on 28/01/2017.
  */
 
-public class Movie implements Serializable{
+class Movie implements Serializable{
+
+
 
     @SerializedName("id")
     private int mId;
@@ -24,12 +26,17 @@ public class Movie implements Serializable{
     @SerializedName("release_date")
     private Date mReleaseDate;
 
-    public Movie(String posterPath, String title, String plotSynopsis, double rating, Date releaseDate) {
+    public Movie(int id, String posterPath, String title, String plotSynopsis, double rating, Date releaseDate) {
+        mId = id;
         mPosterPath = posterPath;
         mTitle = title;
         mPlotSynopsis = plotSynopsis;
         mRating = rating;
         mReleaseDate = releaseDate;
+    }
+
+    public int getmId() {
+        return mId;
     }
 
     public String getPosterPath() {

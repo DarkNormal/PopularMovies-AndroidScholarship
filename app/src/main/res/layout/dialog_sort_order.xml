@@ -6,7 +6,8 @@
         android:id="@+id/order_radio_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin">
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin">
         <RadioButton
             android:text="@string/most_popular_order"
             android:checked="true"

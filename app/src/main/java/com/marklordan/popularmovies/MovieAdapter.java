@@ -1,7 +1,6 @@
 package com.marklordan.popularmovies;
 
 import android.content.Context;
-import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,8 +32,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         boolean shouldAttachToParentImmediately = false;
 
         View view = inflater.inflate(R.layout.movie_grid_item, parent, shouldAttachToParentImmediately);
-        MovieViewHolder holder = new MovieViewHolder(view);
-        return holder;
+        return new MovieViewHolder(view);
     }
 
     public interface MovieItemClickListener{

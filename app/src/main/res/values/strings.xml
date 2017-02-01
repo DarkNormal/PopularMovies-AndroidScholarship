@@ -11,4 +11,8 @@
     <string name="placeholder">placeholder text</string>
     <string name="detail_rating">Average Rating: %1$s/10</string>
     <string name="detail_release_date">Released: %1$s</string>
+
+    <string name="general_network_error">Uh oh! Failed to retrieve movies</string>
+    <string name="network_error_description">A network error occurred while attempting to retrieve movies from the API</string>
+    <string name="poster_image_description">Promotional poster for the movie</string>
 </resources>

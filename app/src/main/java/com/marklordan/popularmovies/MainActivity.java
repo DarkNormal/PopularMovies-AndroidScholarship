@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
 
     private RecyclerView mRecyclerView;
+    private ProgressBar mProgressBar;
+    private LinearLayout mNetworkErrorView;
     private MovieAdapter mAdapter;
     private ArrayList<Movie> mMovies;
     private RequestQueue mQueue;
@@ -48,19 +52,27 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         mQueue = Volley.newRequestQueue(this);
         mSortOrder = getString(R.string.popular);
 
+        mProgressBar = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+        mNetworkErrorView = (LinearLayout) findViewById(R.id.network_error_view);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_movie_list);
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,2);
+        mRecyclerView.setLayoutManager(gridLayoutManager);
+
+
         if(savedInstanceState != null){
             mMovies = (ArrayList<Movie>) savedInstanceState.getSerializable(MOVIE_LIST_KEY);
             mSortOrder = savedInstanceState.getString(MOVIE_SORT_ORDER);
+            if(mMovies.size() == 0){
+                getMoviesFromApi(mSortOrder);
+            }
 
         }
         else{
             mMovies = new ArrayList<>();
             getMoviesFromApi(mSortOrder);
         }
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_movie_list);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,2);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
         mAdapter = new MovieAdapter(mMovies, this, this);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
@@ -68,13 +80,16 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     }
 
     private void getMoviesFromApi(String sortOrder){
+        mProgressBar.setVisibility(View.VISIBLE);
+        mNetworkErrorView.setVisibility(View.INVISIBLE);
         String url = NetworkUtils.buildUrl(sortOrder);
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(MainActivity.this, "got a response", Toast.LENGTH_SHORT).show();
-                        JSONArray resultsArray = null;
+                        mRecyclerView.setVisibility(View.VISIBLE);
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                        JSONArray resultsArray;
                         try {
                             Gson gson = new Gson();
                             mMovies.clear();
@@ -92,6 +107,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("MainActivity", "no response");
+                mProgressBar.setVisibility(View.INVISIBLE);
+                mRecyclerView.setVisibility(View.INVISIBLE);
+                mNetworkErrorView.setVisibility(View.VISIBLE);
             }
         });
         mQueue.add(stringRequest);
@@ -138,7 +156,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     @Override
     public void onSelectedOrderOption(String sortOrder) {
-        Toast.makeText(this, sortOrder, Toast.LENGTH_SHORT).show();
         mSortOrder = sortOrder;
         updateMenuSortOrder();
         getMoviesFromApi(mSortOrder);

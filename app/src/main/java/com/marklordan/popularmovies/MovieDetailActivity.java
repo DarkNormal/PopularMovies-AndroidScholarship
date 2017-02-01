@@ -12,7 +12,6 @@ import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
