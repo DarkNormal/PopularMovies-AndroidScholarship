@@ -1,6 +1,7 @@
 package com.marklordan.popularmovies;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -57,8 +58,12 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_movie_list);
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,2);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            mRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        }
+        else{
+            mRecyclerView.setLayoutManager(new GridLayoutManager(this,4));
+        }
 
 
         if(savedInstanceState != null){
