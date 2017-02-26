@@ -17,6 +17,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    def propertiesFile = rootProject.file("gradle.properties")
+    def properties = new Properties()
+    properties.load(new FileInputStream(propertiesFile))
+    buildTypes.each {
+        it.buildConfigField 'String', 'MOVIE_DB_API_KEY', properties['MyMovieDbApiKey']
+    }
 }
 
 dependencies {

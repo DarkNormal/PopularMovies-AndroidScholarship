@@ -2,13 +2,15 @@ package com.marklordan.popularmovies.utils;
 
 import android.net.Uri;
 
+import com.marklordan.popularmovies.BuildConfig;
+
 /**
  * Created by Mark on 24/01/2017.
  */
 
 public class NetworkUtils {
     //TODO INSERT API KEY HERE
-    private final static String MOVIEDB_API_KEY = "a195975b94781d5ef346c63fe2701d43";
+    private final static String MOVIEDB_API_KEY = BuildConfig.MOVIE_DB_API_KEY;
 
     public static String buildUrl(String movieSortQuery){
         Uri.Builder builder = new Uri.Builder().scheme("http")
