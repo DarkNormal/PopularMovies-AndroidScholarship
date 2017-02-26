@@ -17,6 +17,8 @@ class Movie implements Serializable{
     private int mId;
     @SerializedName("poster_path")
     private String mPosterPath;
+    @SerializedName("backdrop_path")
+    private String mBackdropPath;
     @SerializedName("original_title")
     private String mTitle;
     @SerializedName("overview")
@@ -26,9 +28,10 @@ class Movie implements Serializable{
     @SerializedName("release_date")
     private Date mReleaseDate;
 
-    public Movie(int id, String posterPath, String title, String plotSynopsis, double rating, Date releaseDate) {
+    public Movie(int id, String posterPath, String backdropPath, String title, String plotSynopsis, double rating, Date releaseDate) {
         mId = id;
         mPosterPath = posterPath;
+        mBackdropPath = backdropPath;
         mTitle = title;
         mPlotSynopsis = plotSynopsis;
         mRating = rating;
@@ -41,6 +44,10 @@ class Movie implements Serializable{
 
     public String getPosterPath() {
         return mPosterPath;
+    }
+
+    public String getBackdropPath() {
+        return mBackdropPath;
     }
 
     public String getTitle() {
