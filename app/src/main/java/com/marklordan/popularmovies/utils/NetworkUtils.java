@@ -8,7 +8,7 @@ import android.net.Uri;
 
 public class NetworkUtils {
     //TODO INSERT API KEY HERE
-    private final static String MOVIEDB_API_KEY = "INSERT_API_KEY_HERE";
+    private final static String MOVIEDB_API_KEY = "a195975b94781d5ef346c63fe2701d43";
 
     public static String buildUrl(String movieSortQuery){
         Uri.Builder builder = new Uri.Builder().scheme("http")
