@@ -1,12 +1,18 @@
 package com.marklordan.popularmovies;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -59,6 +65,9 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         mBackdrop = (ImageView) findViewById(R.id.movie_detail_header);
         Picasso.with(this).load("http://image.tmdb.org/t/p/w342//" + mMovie.getBackdropPath()).into(mBackdrop);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            animateBackdrop();
+        }
 
         mMovieTitle = (TextView) findViewById(R.id.movie_detail_title);
         mMovieTitle.setText(mMovie.getTitle());
@@ -74,5 +83,30 @@ public class MovieDetailActivity extends AppCompatActivity {
         mMovieReleaseDate = (TextView) findViewById(R.id.movie_detail_release_date);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         mMovieReleaseDate.setText(String.format(getString(R.string.detail_release_date), sdf.format(mMovie.getReleaseDate())));
+    }
+
+    private void animateBackdrop(){
+        mBackdrop.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onGlobalLayout() {
+                final View myView = mBackdrop;
+
+                // get the center for the clipping circle
+                int cx = myView.getMeasuredWidth() / 2;
+                int cy = myView.getMeasuredHeight();
+
+                // get the final radius for the clipping circle
+                int finalRadius = Math.max(myView.getWidth(), myView.getHeight());
+
+                // create the animator for this view (the start radius is zero)
+                Animator anim = ViewAnimationUtils.createCircularReveal(myView, cx, cy, 0, finalRadius);
+
+
+                // make the view visible and start the animation
+                myView.setVisibility(View.VISIBLE);
+                anim.start();
+            }
+        });
     }
 }
