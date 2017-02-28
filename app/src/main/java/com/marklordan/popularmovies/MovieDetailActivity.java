@@ -16,10 +16,23 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.marklordan.popularmovies.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
@@ -29,6 +42,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private ImageView mMoviePoster, mBackdrop;
     private TextView mMovieTitle, mMoviePlot;
     private TextView mMovieRating, mMovieReleaseDate;
+    private RequestQueue mRequestQueue;
 
 
     public static Intent newInstance(Context context, Movie movie) {
@@ -47,6 +61,9 @@ public class MovieDetailActivity extends AppCompatActivity {
             Log.e("MovieDetailActivity", e.getMessage());
         }
         setContentView(R.layout.activity_movie_detail);
+
+        mRequestQueue = Volley.newRequestQueue(this);
+        getTrailers(mMovie.getmId());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -83,6 +100,36 @@ public class MovieDetailActivity extends AppCompatActivity {
         mMovieReleaseDate = (TextView) findViewById(R.id.movie_detail_release_date);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         mMovieReleaseDate.setText(String.format(getString(R.string.detail_release_date), sdf.format(mMovie.getReleaseDate())));
+    }
+
+    private void getTrailers(int movieId){
+        String url = NetworkUtils.buildMovieExtraDetailsUrl(movieId, "videos");
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        JSONArray resultsArray;
+                        try {
+                            Gson gson = new Gson();
+                            resultsArray = response.getJSONArray("results");
+                            ArrayList<String> youtubeKeys = new ArrayList<>();
+                            for (int i = 0; i < resultsArray.length(); i++) {
+                                youtubeKeys.add(resultsArray.getJSONObject(i).getString("key"));
+                            }
+                            mMovie.setYoutubeKeys(youtubeKeys);
+                            Log.i("DetailActivity", youtubeKeys.size() + " ");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("MainActivity", "no response");
+            }
+        });
+        mRequestQueue.add(stringRequest);
     }
 
     private void animateBackdrop(){

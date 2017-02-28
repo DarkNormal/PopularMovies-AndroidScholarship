@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Mark on 28/01/2017.
@@ -27,6 +28,8 @@ class Movie implements Serializable{
     private double mRating;
     @SerializedName("release_date")
     private Date mReleaseDate;
+
+    private List<String> mYoutubeKeys;
 
     public Movie(int id, String posterPath, String backdropPath, String title, String plotSynopsis, double rating, Date releaseDate) {
         mId = id;
@@ -64,5 +67,9 @@ class Movie implements Serializable{
 
     public Date getReleaseDate() {
         return mReleaseDate;
+    }
+
+    public void setYoutubeKeys(List<String> youtubeKeys){
+        mYoutubeKeys = youtubeKeys;
     }
 }
