@@ -29,7 +29,7 @@ class Movie implements Serializable{
     @SerializedName("release_date")
     private Date mReleaseDate;
 
-    private List<String> mYoutubeKeys;
+    private List<Trailer> mTrailers;
 
     public Movie(int id, String posterPath, String backdropPath, String title, String plotSynopsis, double rating, Date releaseDate) {
         mId = id;
@@ -69,7 +69,31 @@ class Movie implements Serializable{
         return mReleaseDate;
     }
 
-    public void setYoutubeKeys(List<String> youtubeKeys){
-        mYoutubeKeys = youtubeKeys;
+    public List<Trailer> getTrailers() {
+        return mTrailers;
+    }
+
+    public void setTrailers(List<Trailer> trailers){
+        mTrailers = trailers;
+    }
+
+     class Trailer implements Serializable {
+         @SerializedName("key")
+        private String mYoutubeKey;
+         @SerializedName("name")
+        private String mTrailerName;
+
+        public Trailer(String mYoutubeKey, String mTrailerName) {
+            this.mYoutubeKey = mYoutubeKey;
+            this.mTrailerName = mTrailerName;
+        }
+
+        public String getYoutubeKey() {
+            return mYoutubeKey;
+        }
+
+        public String getTrailerName() {
+            return mTrailerName;
+        }
     }
 }

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -100,6 +102,16 @@ public class MovieDetailActivity extends AppCompatActivity {
         mMovieReleaseDate = (TextView) findViewById(R.id.movie_detail_release_date);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         mMovieReleaseDate.setText(String.format(getString(R.string.detail_release_date), sdf.format(mMovie.getReleaseDate())));
+
+
+        // Get the ViewPager and set it's PagerAdapter so that it can display items
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new DetailPagerAdapter(getSupportFragmentManager(),
+                MovieDetailActivity.this, mMovie));
+
+        // Give the TabLayout the ViewPager
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     private void getTrailers(int movieId){
@@ -113,12 +125,13 @@ public class MovieDetailActivity extends AppCompatActivity {
                         try {
                             Gson gson = new Gson();
                             resultsArray = response.getJSONArray("results");
-                            ArrayList<String> youtubeKeys = new ArrayList<>();
+                            ArrayList<Movie.Trailer> trailers = new ArrayList<>();
                             for (int i = 0; i < resultsArray.length(); i++) {
-                                youtubeKeys.add(resultsArray.getJSONObject(i).getString("key"));
+                                Movie.Trailer trailer = gson.fromJson(String.valueOf(resultsArray.getJSONObject(i)), Movie.Trailer.class);
+                                trailers.add(trailer);
                             }
-                            mMovie.setYoutubeKeys(youtubeKeys);
-                            Log.i("DetailActivity", youtubeKeys.size() + " ");
+                            mMovie.setTrailers(trailers);
+                            Log.i("DetailActivity", trailers.size() + " ");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
