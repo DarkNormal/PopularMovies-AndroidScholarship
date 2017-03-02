@@ -104,14 +104,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         mMovieReleaseDate.setText(String.format(getString(R.string.detail_release_date), sdf.format(mMovie.getReleaseDate())));
 
 
-        // Get the ViewPager and set it's PagerAdapter so that it can display items
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new DetailPagerAdapter(getSupportFragmentManager(),
-                MovieDetailActivity.this, mMovie));
 
-        // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(viewPager);
     }
 
     private void getTrailers(int movieId){
@@ -132,6 +125,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                             }
                             mMovie.setTrailers(trailers);
                             Log.i("DetailActivity", trailers.size() + " ");
+                            populateTrailersAndReviews();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -168,5 +162,16 @@ public class MovieDetailActivity extends AppCompatActivity {
                 anim.start();
             }
         });
+    }
+
+    private void populateTrailersAndReviews(){
+        // Get the ViewPager and set it's PagerAdapter so that it can display items
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new DetailPagerAdapter(getSupportFragmentManager(),
+                MovieDetailActivity.this, mMovie));
+
+        // Give the TabLayout the ViewPager
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
     }
 }
