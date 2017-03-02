@@ -30,6 +30,7 @@ class Movie implements Serializable{
     private Date mReleaseDate;
 
     private List<Trailer> mTrailers;
+    private List<Review> mReviews;
 
     public Movie(int id, String posterPath, String backdropPath, String title, String plotSynopsis, double rating, Date releaseDate) {
         mId = id;
@@ -77,6 +78,14 @@ class Movie implements Serializable{
         mTrailers = trailers;
     }
 
+    public List<Review> getReviews() {
+        return mReviews;
+    }
+
+    public void setReviews(List<Review> mReviews) {
+        this.mReviews = mReviews;
+    }
+
      class Trailer implements Serializable {
          @SerializedName("key")
         private String mYoutubeKey;
@@ -94,6 +103,33 @@ class Movie implements Serializable{
 
         public String getTrailerName() {
             return mTrailerName;
+        }
+    }
+
+    class Review implements Serializable{
+        @SerializedName("autor")
+        public String mAuthor;
+        @SerializedName("content")
+        public String mContent;
+        @SerializedName("url")
+        public String mUrl;
+
+        public Review(String author, String content, String url){
+            this.mAuthor = author;
+            this.mContent = content;
+            this.mUrl = url;
+        }
+
+        public String getAuthor() {
+            return mAuthor;
+        }
+
+        public String getContent() {
+            return mContent;
+        }
+
+        public String getUrl() {
+            return mUrl;
         }
     }
 }

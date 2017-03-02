@@ -66,6 +66,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         mRequestQueue = Volley.newRequestQueue(this);
         getTrailers(mMovie.getmId());
+        getReviews(mMovie.getmId());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -139,6 +140,38 @@ public class MovieDetailActivity extends AppCompatActivity {
         mRequestQueue.add(stringRequest);
     }
 
+    private void getReviews(int movieId){
+        String url = NetworkUtils.buildMovieExtraDetailsUrl(movieId, "reviews");
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        JSONArray resultsArray;
+                        try {
+                            Gson gson = new Gson();
+                            resultsArray = response.getJSONArray("results");
+                            ArrayList<Movie.Review> reviews = new ArrayList<>();
+                            for (int i = 0; i < resultsArray.length(); i++) {
+                                Movie.Review review = gson.fromJson(String.valueOf(resultsArray.getJSONObject(i)), Movie.Review.class);
+                                reviews.add(review);
+                            }
+                            mMovie.setReviews(reviews);
+                            Log.i("DetailActivity", reviews.size() + " ");
+                            populateTrailersAndReviews();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("MainActivity", "no response");
+            }
+        });
+        mRequestQueue.add(stringRequest);
+    }
+
     private void animateBackdrop(){
         mBackdrop.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -165,13 +198,15 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void populateTrailersAndReviews(){
-        // Get the ViewPager and set it's PagerAdapter so that it can display items
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new DetailPagerAdapter(getSupportFragmentManager(),
-                MovieDetailActivity.this, mMovie));
+        if(mMovie.getTrailers() != null && mMovie.getReviews() != null) {
+            // Get the ViewPager and set it's PagerAdapter so that it can display items
+            ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+            viewPager.setAdapter(new DetailPagerAdapter(getSupportFragmentManager(),
+                    MovieDetailActivity.this, mMovie));
 
-        // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(viewPager);
+            // Give the TabLayout the ViewPager
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+            tabLayout.setupWithViewPager(viewPager);
+        }
     }
 }

@@ -23,7 +23,13 @@ public class DetailPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return DetailFragment.newInstance(position + 1, mMovie.getTrailers());
+        if(position == 0){
+            return TrailerFragment.newInstance(position + 1, mMovie.getTrailers());
+        }
+        else {
+            return ReviewFragment.newInstance(position + 1, mMovie.getReviews());
+        }
+
     }
 
     @Override
