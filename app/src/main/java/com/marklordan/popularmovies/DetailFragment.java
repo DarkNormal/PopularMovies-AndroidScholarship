@@ -1,5 +1,7 @@
 package com.marklordan.popularmovies;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +18,7 @@ import java.util.List;
  * Created by mark on 01/03/17.
  */
 
-public class DetailFragment extends Fragment{
+public class DetailFragment extends Fragment implements TrailerAdapter.TrailerClickListener{
 
     public static final String ARG_MOVIE = "ARG_MOVIE";
 
@@ -44,8 +46,13 @@ public class DetailFragment extends Fragment{
         mRecyclerview = (RecyclerView) view.findViewById(R.id.details_recyclerview);
         mRecyclerview.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        TrailerAdapter mAdapter = new TrailerAdapter(trailers, getContext());
+        TrailerAdapter mAdapter = new TrailerAdapter(trailers, getContext(), this);
         mRecyclerview.setAdapter(mAdapter);
         return view;
+    }
+
+    @Override
+    public void onItemClick(int itemClicked) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + trailers.get(itemClicked).getYoutubeKey())));
     }
 }

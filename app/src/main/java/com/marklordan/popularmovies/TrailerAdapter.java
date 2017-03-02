@@ -19,10 +19,12 @@ import java.util.List;
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerViewHolder> {
     private Context mContext;
     private List<Movie.Trailer> mTrailers;
+    private final TrailerClickListener mTrailerClickListener;
 
-    public TrailerAdapter(List<Movie.Trailer> trailers, Context context){
+    public TrailerAdapter(List<Movie.Trailer> trailers, Context context, TrailerClickListener trailerClickListener){
         this.mContext = context;
         mTrailers = trailers;
+        mTrailerClickListener = trailerClickListener;
     }
     @Override
     public TrailerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -33,7 +35,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
         return new TrailerViewHolder(view);
     }
 
-    public interface MovieItemClickListener{
+    public interface TrailerClickListener{
         void onItemClick(int itemClicked);
     }
 
@@ -47,18 +49,23 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
         return mTrailers.size();
     }
 
-    public class TrailerViewHolder extends RecyclerView.ViewHolder{
+    public class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView mTrailerTitle;
 
         public TrailerViewHolder(View itemView) {
             super(itemView);
             mTrailerTitle = (TextView) itemView.findViewById(R.id.trailer_title);
+            itemView.setOnClickListener(this);
         }
         public void bind(){
             if(mTrailers.size()> 0){
                 mTrailerTitle.setText(mTrailers.get(getAdapterPosition()).getTrailerName());
             }
 
+        }
+        @Override
+        public void onClick(View v) {
+            mTrailerClickListener.onItemClick(getAdapterPosition());
         }
     }
 }
