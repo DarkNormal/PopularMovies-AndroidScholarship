@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -43,7 +44,11 @@ public class TrailerFragment extends Fragment implements TrailerAdapter.TrailerC
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_extra_movie_details, container, false);
         mRecyclerview = (RecyclerView) view.findViewById(R.id.details_recyclerview);
-        mRecyclerview.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerview.getContext(),
+                layoutManager.getOrientation());
+        mRecyclerview.addItemDecoration(dividerItemDecoration);
+        mRecyclerview.setLayoutManager(layoutManager);
 
         if(trailers != null) {
             TrailerAdapter mAdapter = new TrailerAdapter(trailers, getContext(), this);
