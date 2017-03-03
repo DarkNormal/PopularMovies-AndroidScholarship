@@ -10,8 +10,8 @@ import android.support.v4.app.FragmentPagerAdapter;
  */
 
 public class DetailPagerAdapter extends FragmentPagerAdapter {
-    final int PAGE_COUNT = 2;
-    private String tabTitles[] = new String[] { "Trailers", "Reviews"};
+    final int PAGE_COUNT = 3;
+    private String tabTitles[] = new String[] { "Details", "Trailers", "Reviews"};
     private Context context;
     private Movie mMovie;
 
@@ -24,9 +24,12 @@ public class DetailPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if(position == 0){
+            return MovieDetailFragment.newInstance(position + 1, mMovie);
+        }
+        else if(position == 1){
             return TrailerFragment.newInstance(position + 1, mMovie.getTrailers());
         }
-        else {
+        else{
             return ReviewFragment.newInstance(position + 1, mMovie.getReviews());
         }
 

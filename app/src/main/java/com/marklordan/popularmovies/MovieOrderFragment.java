@@ -26,7 +26,6 @@ public class MovieOrderFragment extends DialogFragment {
 
         Bundle args = new Bundle();
         args.putString(SORT_ORDER_KEY, sortOrder);
-
         MovieOrderFragment fragment = new MovieOrderFragment();
         fragment.setArguments(args);
         return fragment;

@@ -41,7 +41,7 @@ public class TrailerFragment extends Fragment implements TrailerAdapter.TrailerC
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_movie_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_extra_movie_details, container, false);
         mRecyclerview = (RecyclerView) view.findViewById(R.id.details_recyclerview);
         mRecyclerview.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
