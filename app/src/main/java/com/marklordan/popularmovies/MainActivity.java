@@ -2,6 +2,7 @@ package com.marklordan.popularmovies;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.marklordan.popularmovies.data.FavouriteMoviesContract;
 import com.marklordan.popularmovies.utils.NetworkUtils;
 
 import org.json.JSONArray;
@@ -30,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieItemClickListener, IOrderSelection{
 
@@ -168,7 +171,12 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     public void onSelectedOrderOption(String sortOrder) {
         mSortOrder = sortOrder;
         updateMenuSortOrder();
-        getMoviesFromApi(mSortOrder);
+        if(sortOrder.equals(getString(R.string.favourites)) == false) {
+            getMoviesFromApi(mSortOrder);
+        }
+        else{
+            getMoviesFromDb();
+        }
     }
 
     private void updateMenuSortOrder(){
@@ -177,7 +185,41 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         if(mSortOrder.equals(getString(R.string.rated))){
             menuTitleOrder = getString(R.string.top_rated_order);
         }
+        else if(mSortOrder.equals(getString(R.string.favourites))){
+            menuTitleOrder = getString(R.string.favourites_order);
+        }
         sortOrder.setTitle(String.format(getString(R.string.menu_order_by), menuTitleOrder));
+    }
+
+    private void getMoviesFromDb(){
+        Cursor cursor = getContentResolver().query(FavouriteMoviesContract.FavouriteMoviesEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null);
+        if(cursor != null){
+            mMovies.clear();
+            while(cursor.moveToNext()){
+                int idIndex = cursor.getColumnIndex(FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_ID);
+                int titleIndex = cursor.getColumnIndex(FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_TITLE);
+                int ratingIndex = cursor.getColumnIndex(FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_RATING);
+                int releaseIndex = cursor.getColumnIndex(FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_RELEASE_DATE);
+                int plotIndex = cursor.getColumnIndex(FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_PLOT);
+                int posterIndex = cursor.getColumnIndex(FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_POSTER);
+                int backdropIndex = cursor.getColumnIndex(FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_BACKDROP);
+
+                int id = cursor.getInt(idIndex);
+                String title = cursor.getString(titleIndex);
+                double rating = cursor.getDouble(ratingIndex);
+                long releaseDate = cursor.getLong(releaseIndex);
+                String plot = cursor.getString(plotIndex);
+                String posterPath = cursor.getString(posterIndex);
+                String backdropPath = cursor.getString(backdropIndex);
+                Movie movie = new Movie(id,posterPath,backdropPath,title,plot,rating, new Date(releaseDate));
+                mMovies.add(movie);
+            }
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
 

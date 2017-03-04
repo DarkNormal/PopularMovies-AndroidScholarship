@@ -50,11 +50,15 @@ public class MovieOrderFragment extends DialogFragment {
         final RadioGroup radioGroup = (RadioGroup) v.findViewById(R.id.order_radio_group);
         final RadioButton topRatedButton = (RadioButton) v.findViewById(R.id.top_rated_radio_button);
         final RadioButton mostPopularButton = (RadioButton) v.findViewById(R.id.popular_radio_button);
+        final RadioButton favouriteButton = (RadioButton) v.findViewById(R.id.favourite_radio_button);
         if(sortOrder.equals(getString(R.string.popular))){
             mostPopularButton.setChecked(true);
         }
-        else{
+        else if(sortOrder.equals(getString(R.string.rated))){
             topRatedButton.setChecked(true);
+        }
+        else{
+            favouriteButton.setChecked(true);
         }
 
         return new AlertDialog.Builder(getActivity())
@@ -67,6 +71,9 @@ public class MovieOrderFragment extends DialogFragment {
                         String sort_order = getString(R.string.popular);
                         if(selectedOption == topRatedButton.getId()){
                             sort_order = getString(R.string.rated);
+                        }
+                        else if(selectedOption == favouriteButton.getId()){
+                            sort_order = getString(R.string.favourites);
                         }
                         mCallback.onSelectedOrderOption(sort_order);
                     }

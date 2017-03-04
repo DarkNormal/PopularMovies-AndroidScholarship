@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -91,16 +93,17 @@ public class MovieDetailFragment extends Fragment {
 
         mLikeButton = (LikeButton) view.findViewById(R.id.favourite_button);
 
-        Cursor cursor = mDb.query(
-                FavouriteMoviesContract.FavouriteMoviesEntry.TABLE_NAME,
+        Cursor cursor = getContext().getContentResolver().query(FavouriteMoviesContract.FavouriteMoviesEntry.CONTENT_URI,
                 null,
                 FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_ID + " = " + mMovie.getmId(),
                 null,
                 null,
-                null,
                 null);
-        while(cursor.moveToNext()){
-            mLikeButton.setLiked(true);
+
+        if (cursor != null) {
+            while(cursor.moveToNext()){
+                mLikeButton.setLiked(true);
+            }
         }
 
 
@@ -108,39 +111,42 @@ public class MovieDetailFragment extends Fragment {
             @Override
             public void liked(LikeButton likeButton) {
                 ContentValues cv = buildMovieContentValues();
-                long addedId = addMovieToFavouriteDb(cv);
-                System.out.println(addedId);
+                addMovieToFavouriteDb(cv);
             }
 
             @Override
             public void unLiked(LikeButton likeButton) {
-                boolean deleted = removeMovieFromFavouriteDb();
-                System.out.println(deleted);
+                removeMovieFromFavouriteDb();
             }
         });
 
-
-
-
-
-
-        
         return view;
     }
     private ContentValues buildMovieContentValues(){
         ContentValues cv = new ContentValues();
         cv.put(FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_ID, mMovie.getmId());
         cv.put(FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_TITLE, mMovie.getTitle());
+        cv.put(FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_PLOT, mMovie.getPlotSynopsis());
+        cv.put(FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_RATING, mMovie.getRating());
+        cv.put(FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_RELEASE_DATE, mMovie.getReleaseDate().getTime());
+        cv.put(FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_POSTER, mMovie.getPosterPath());
+        cv.put(FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_BACKDROP, mMovie.getBackdropPath());
         return cv;
     }
 
-    private long addMovieToFavouriteDb(ContentValues cv){
-        return mDb.insert(FavouriteMoviesContract.FavouriteMoviesEntry.TABLE_NAME, null, cv);
+    private void addMovieToFavouriteDb(ContentValues cv){
+        Uri uri = getContext().getContentResolver().insert(FavouriteMoviesContract.FavouriteMoviesEntry.CONTENT_URI, cv);
+        if(uri != null) {
+            Toast.makeText(getContext(), uri.toString(), Toast.LENGTH_LONG).show();
+        }
     }
 
-    private boolean removeMovieFromFavouriteDb(){
-        return mDb.delete(FavouriteMoviesContract.FavouriteMoviesEntry.TABLE_NAME,
-                FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_ID + " = " + mMovie.getmId(), null) > 0;
+    private void removeMovieFromFavouriteDb(){
+        String id = Integer.toString(mMovie.getmId());
+        Uri uri = FavouriteMoviesContract.FavouriteMoviesEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(id).build();
+
+        getContext().getContentResolver().delete(uri, null,null);
 
     }
 

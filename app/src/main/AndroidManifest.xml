@@ -22,6 +22,12 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
+
+        <provider
+            android:name="com.marklordan.popularmovies.data.FavouriteContentProvider"
+            android:authorities="com.marklordan.popularmovies"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

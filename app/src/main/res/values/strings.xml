@@ -4,9 +4,12 @@
     <string name="menu_order_by">Order By: %1$s</string>
     <string name="top_rated_order">Top Rated</string>
     <string name="most_popular_order">Most Popular</string>
+    <string name="favourites_order">Your Favourites</string>
 
     <string name="popular">popular</string>
     <string name="rated">top_rated</string>
+    <string name="favourites">favourites</string>
+
 
     <string name="placeholder">placeholder text</string>
     <string name="detail_rating">Average Rating: %1$s/10</string>
