@@ -107,7 +107,7 @@ class Movie implements Serializable{
     }
 
     class Review implements Serializable{
-        @SerializedName("autor")
+        @SerializedName("author")
         public String mAuthor;
         @SerializedName("content")
         public String mContent;

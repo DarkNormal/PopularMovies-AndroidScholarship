@@ -2,6 +2,7 @@ package com.marklordan.popularmovies;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -43,6 +44,9 @@ public class ReviewFragment extends Fragment {
         mRecyclerview = (RecyclerView) view.findViewById(R.id.details_recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         linearLayoutManager.setAutoMeasureEnabled(true);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerview.getContext(),
+                linearLayoutManager.getOrientation());
+        mRecyclerview.addItemDecoration(dividerItemDecoration);
         mRecyclerview.setLayoutManager(linearLayoutManager);
 
         if(reviews != null) {

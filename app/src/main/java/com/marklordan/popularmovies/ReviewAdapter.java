@@ -43,15 +43,17 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     }
 
     public class ReviewViewHolder extends RecyclerView.ViewHolder{
-        private TextView mReviewContent;
+        private TextView mReviewContent, mReviewReviewer;
 
         public ReviewViewHolder(View itemView) {
             super(itemView);
             mReviewContent = (TextView) itemView.findViewById(R.id.review_content);
+            mReviewReviewer = (TextView) itemView.findViewById(R.id.reviewer_username);
         }
         public void bind(){
             if(mReviews.size()> 0){
                 mReviewContent.setText(mReviews.get(getAdapterPosition()).getContent());
+                mReviewReviewer.setText(String.format(mContext.getResources().getString(R.string.review_author_title),mReviews.get(getAdapterPosition()).getAuthor()));
             }
 
         }
