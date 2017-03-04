@@ -1,6 +1,10 @@
 package com.marklordan.popularmovies;
 
 import android.animation.Animator;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -15,6 +19,10 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.like.LikeButton;
+import com.like.OnLikeListener;
+import com.marklordan.popularmovies.data.FavouriteMoviesContract;
+import com.marklordan.popularmovies.data.FavouriteMoviesDbHelper;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
@@ -34,6 +42,8 @@ public class MovieDetailFragment extends Fragment {
     private ImageView mMoviePoster;
     private TextView mMovieTitle, mMoviePlot;
     private TextView mMovieRating, mMovieReleaseDate;
+    private LikeButton mLikeButton;
+    private SQLiteDatabase mDb;
 
 
     public static MovieDetailFragment newInstance(int page, Movie movie) {
@@ -74,8 +84,64 @@ public class MovieDetailFragment extends Fragment {
         mMovieReleaseDate = (TextView) view.findViewById(R.id.movie_detail_release_date);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         mMovieReleaseDate.setText(String.format(getString(R.string.detail_release_date), sdf.format(mMovie.getReleaseDate())));
+
+        FavouriteMoviesDbHelper dbHelper = new FavouriteMoviesDbHelper(getContext());
+
+        mDb = dbHelper.getWritableDatabase();
+
+        mLikeButton = (LikeButton) view.findViewById(R.id.favourite_button);
+
+        Cursor cursor = mDb.query(
+                FavouriteMoviesContract.FavouriteMoviesEntry.TABLE_NAME,
+                null,
+                FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_ID + " = " + mMovie.getmId(),
+                null,
+                null,
+                null,
+                null);
+        while(cursor.moveToNext()){
+            mLikeButton.setLiked(true);
+        }
+
+
+        mLikeButton.setOnLikeListener(new OnLikeListener() {
+            @Override
+            public void liked(LikeButton likeButton) {
+                ContentValues cv = buildMovieContentValues();
+                long addedId = addMovieToFavouriteDb(cv);
+                System.out.println(addedId);
+            }
+
+            @Override
+            public void unLiked(LikeButton likeButton) {
+                boolean deleted = removeMovieFromFavouriteDb();
+                System.out.println(deleted);
+            }
+        });
+
+
+
+
+
+
         
         return view;
+    }
+    private ContentValues buildMovieContentValues(){
+        ContentValues cv = new ContentValues();
+        cv.put(FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_ID, mMovie.getmId());
+        cv.put(FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_TITLE, mMovie.getTitle());
+        return cv;
+    }
+
+    private long addMovieToFavouriteDb(ContentValues cv){
+        return mDb.insert(FavouriteMoviesContract.FavouriteMoviesEntry.TABLE_NAME, null, cv);
+    }
+
+    private boolean removeMovieFromFavouriteDb(){
+        return mDb.delete(FavouriteMoviesContract.FavouriteMoviesEntry.TABLE_NAME,
+                FavouriteMoviesContract.FavouriteMoviesEntry.COLUMN_MOVIE_ID + " = " + mMovie.getmId(), null) > 0;
+
     }
 
 
