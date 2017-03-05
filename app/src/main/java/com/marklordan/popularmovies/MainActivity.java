@@ -1,7 +1,7 @@
 package com.marklordan.popularmovies;
 
+import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     private static final String MOVIE_LIST_KEY = "com.marklordan.popularmovies.MOVIE_LIST";
     private static final String MOVIE_ORDER_FRAGMENT = "com.marklordan.popularmovies.ORDER_FRAGMENT";
     private static final String MOVIE_SORT_ORDER = "com.marklordan.popularmovies.SORT_ORDER";
+    private static final String CURRENT_SCROLL_POSITION = "com.marklordan.popularmovies.CURRENT_SCROLL_POSITION";
 
 
     private RecyclerView mRecyclerView;
@@ -49,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     private RequestQueue mQueue;
     private String mSortOrder;
     private Menu mMenu;
+    private int currentScrollPosition;
+    private GridLayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,15 +70,19 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_movie_list);
 
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            mRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
-        }
-        else{
-            mRecyclerView.setLayoutManager(new GridLayoutManager(this,4));
-        }
+//        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+//            mRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
+//        }
+//        else{
+//            mRecyclerView.setLayoutManager(new GridLayoutManager(this,4));
+//        }
+        int numberOfColumns = calculateNoOfColumns(this);
+        layoutManager = new GridLayoutManager(this, numberOfColumns);
+        mRecyclerView.setLayoutManager(layoutManager);
 
 
         if(savedInstanceState != null){
+            currentScrollPosition = savedInstanceState.getInt(CURRENT_SCROLL_POSITION, 200);
             mMovies = (ArrayList<Movie>) savedInstanceState.getSerializable(MOVIE_LIST_KEY);
             mSortOrder = savedInstanceState.getString(MOVIE_SORT_ORDER);
             if(mMovies.size() == 0){
@@ -89,6 +98,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         mAdapter = new MovieAdapter(mMovies, this, this);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
+
+        if(currentScrollPosition != 0){
+            mRecyclerView.smoothScrollToPosition(currentScrollPosition);
+        }
 
     }
 
@@ -154,9 +167,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putSerializable(MOVIE_LIST_KEY, mMovies);
         outState.putString(MOVIE_SORT_ORDER,mSortOrder);
-        super.onSaveInstanceState(outState);
+        outState.putInt(CURRENT_SCROLL_POSITION, layoutManager.findFirstVisibleItemPosition());
+
 
     }
 
@@ -177,6 +192,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         else{
             getMoviesFromDb();
         }
+    }
+
+    public static int calculateNoOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int noOfColumns = (int) (dpWidth / 180);
+        return noOfColumns;
     }
 
     private void updateMenuSortOrder(){
@@ -219,6 +241,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
                 mMovies.add(movie);
             }
             mAdapter.notifyDataSetChanged();
+            if(mRecyclerView.getVisibility() == View.INVISIBLE) {
+                mRecyclerView.setVisibility(View.VISIBLE);
+                mNetworkErrorView.setVisibility(View.INVISIBLE);
+            }
         }
         cursor.close();
     }
