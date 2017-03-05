@@ -4,9 +4,11 @@ Project submission as part of the Android Associate Fast Track scholarship from 
 
 This app has the API Key for TheMovieDB stored in the gradle.properties file which has been removed from this repository.
 Inserting the following into gradle.properties file will allow the API to work:
+
     MyMovieDbApiKey ="<YOUR_API_KEY_HERE>"
 
-
+Used libraries:
+Like Button - https://github.com/jd-alexander/LikeButton
 
 ![Popular Movies Portrait](http://i.imgur.com/TTUWK5C.png)
 
