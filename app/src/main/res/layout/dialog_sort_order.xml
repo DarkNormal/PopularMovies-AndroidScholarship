@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <RadioGroup
-        android:id="@+id/order_radio_group"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin">
+<RadioGroup android:id="@+id/order_radio_group"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    xmlns:android="http://schemas.android.com/apk/res/android">
         <RadioButton
             android:text="@string/most_popular_order"
             android:checked="true"
@@ -27,5 +24,3 @@
             android:layout_height="wrap_content"
             android:id="@+id/favourite_radio_button" />
     </RadioGroup>
-
-</LinearLayout>

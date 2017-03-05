@@ -1,25 +1,16 @@
 package com.marklordan.popularmovies;
 
-import android.animation.Animator;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -27,10 +18,8 @@ import com.marklordan.popularmovies.data.FavouriteMoviesContract;
 import com.marklordan.popularmovies.data.FavouriteMoviesDbHelper;
 import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 /**
  * Created by mark on 03/03/17.
@@ -105,6 +94,7 @@ public class MovieDetailFragment extends Fragment {
                 mLikeButton.setLiked(true);
             }
         }
+        cursor.close();
 
 
         mLikeButton.setOnLikeListener(new OnLikeListener() {
@@ -135,10 +125,7 @@ public class MovieDetailFragment extends Fragment {
     }
 
     private void addMovieToFavouriteDb(ContentValues cv){
-        Uri uri = getContext().getContentResolver().insert(FavouriteMoviesContract.FavouriteMoviesEntry.CONTENT_URI, cv);
-        if(uri != null) {
-            Toast.makeText(getContext(), uri.toString(), Toast.LENGTH_LONG).show();
-        }
+        getContext().getContentResolver().insert(FavouriteMoviesContract.FavouriteMoviesEntry.CONTENT_URI, cv);
     }
 
     private void removeMovieFromFavouriteDb(){

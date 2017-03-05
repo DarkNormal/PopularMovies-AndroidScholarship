@@ -5,12 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 <android.support.constraint.ConstraintLayout
     android:id="@+id/activity_movie_detail"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="wrap_content"
     tools:context="com.marklordan.popularmovies.MovieDetailActivity"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -18,14 +17,14 @@
 
     <ImageView
         android:id="@+id/movie_detail_poster"
-        android:layout_width="150dp"
+        android:layout_width="@dimen/movie_poster_width"
         android:adjustViewBounds="true"
         android:contentDescription="@string/poster_image_description"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="8dp" />
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin_small" />
 
     <TextView
         android:id="@+id/movie_detail_title"
@@ -34,15 +33,14 @@
         android:maxWidth="180dp"
         tools:text="@string/placeholder"
         android:textStyle="bold"
-        android:textSize="22sp"
+        android:textSize="@dimen/heading_text_size"
         android:scrollHorizontally="false"
         android:ellipsize="end"
         android:maxLines="3"
-        android:layout_marginEnd="8dp"
         app:layout_constraintLeft_toRightOf="@+id/movie_detail_poster"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         app:layout_constraintTop_toTopOf="@+id/movie_detail_poster"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="@dimen/activity_vertical_margin_small" />
 
 
 
@@ -52,7 +50,7 @@
         android:layout_height="wrap_content"
         tools:text="@string/placeholder"
         android:textStyle="bold"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin_small"
         app:layout_constraintTop_toBottomOf="@+id/movie_detail_title"
         app:layout_constraintLeft_toLeftOf="@+id/movie_detail_title" />
 
@@ -61,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="@string/placeholder"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin_small"
         app:layout_constraintTop_toBottomOf="@+id/movie_detail_rating"
         app:layout_constraintLeft_toLeftOf="@+id/movie_detail_rating" />
 
@@ -69,7 +67,7 @@
         android:id="@+id/favourite_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:icon_size="25dp"
+        app:icon_size="@dimen/like_button_size"
         app:icon_type="heart"
         app:layout_constraintLeft_toLeftOf="@+id/movie_detail_release_date"
         app:layout_constraintTop_toBottomOf="@+id/movie_detail_release_date" />
@@ -77,14 +75,12 @@
 
     <TextView
         android:id="@+id/movie_detail_plot"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         tools:text="@string/placeholder"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         app:layout_constraintTop_toBottomOf="@+id/movie_detail_poster"
         app:layout_constraintLeft_toLeftOf="@+id/movie_detail_poster"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
         app:layout_constraintRight_toRightOf="parent" />
 
 

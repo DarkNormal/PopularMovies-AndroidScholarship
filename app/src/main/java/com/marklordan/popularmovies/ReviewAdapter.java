@@ -51,11 +51,10 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             mReviewReviewer = (TextView) itemView.findViewById(R.id.reviewer_username);
         }
         public void bind(){
-            if(mReviews.size()> 0){
-                mReviewContent.setText(mReviews.get(getAdapterPosition()).getContent());
-                mReviewReviewer.setText(String.format(mContext.getResources().getString(R.string.review_author_title),mReviews.get(getAdapterPosition()).getAuthor()));
-            }
-
+            mReviewContent.setText(mReviews.get(getAdapterPosition()).getContent());
+            mReviewReviewer.setText(
+                    String.format(mContext.getResources().getString(R.string.review_author_title),
+                            mReviews.get(getAdapterPosition()).getAuthor()));
         }
     }
 }

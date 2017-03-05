@@ -1,11 +1,7 @@
 package com.marklordan.popularmovies;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -13,11 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -33,8 +25,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class MovieDetailActivity extends AppCompatActivity {
@@ -44,7 +34,6 @@ public class MovieDetailActivity extends AppCompatActivity {
 
 
     private RequestQueue mRequestQueue;
-    private ImageView mBackdrop;
 
 
     public static Intent newInstance(Context context, Movie movie) {
@@ -72,7 +61,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        mBackdrop = (ImageView) findViewById(R.id.movie_detail_header);
+        ImageView mBackdrop = (ImageView) findViewById(R.id.movie_detail_header);
         Picasso.with(this).load("http://image.tmdb.org/t/p/w342//" + mMovie.getBackdropPath()).into(mBackdrop);
 
 
